@@ -318,7 +318,7 @@ export function AIChatPage({ state, setState }) {
 
     // Call real Gemini API via backend
     try {
-      const res = await fetch('http://localhost:8000/api/chat', {
+      const res = await fetch(import.meta.env.DEV ? 'http://localhost:8000/api/chat' : '/api/chat', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ session_id: 'election-sathi-chat', message: text })
