@@ -1,0 +1,2 @@
+"import React, { useState } from 'react';\nimport { signUpWithEmail, signInWithEmail, upsertUser } from '../lib/supabase';\n\n// BrandLogo placeholder component since it's used in the UI\nfunction BrandLogo({ size = 'md' }) {\n  const sizes = { sm: 'text-x
+<truncated 7249 bytes>

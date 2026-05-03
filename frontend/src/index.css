@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ─────────────────────────────────────── */
+:root {
+  --void: #0a0a14;
+  --plasma: #7b61ff;
+  --plasma-light: #a695ff;
+  --ghost: #f0eff4;
+  --graphite: #18181b;
+  --graphite-light: #27272a;
+}
+
+/* ─── Global Reset & Base ────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--void);
+  color: var(--ghost);
+  font-family: "Sora", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Global Noise Overlay ───────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Floating Background Text ──────────────────────────── */
+.bg-float-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22vw;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  color: var(--plasma);
+  opacity: 0.025;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb {
+  background: var(--plasma);
+  border-radius: 2px;
+}
+
+/* ─── Glass Panel ────────────────────────────────────────── */
+.glass {
+  background: rgba(123, 97, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(123, 97, 255, 0.15);
+}
+
+/* ─── Plasma Glow ────────────────────────────────────────── */
+.plasma-glow {
+  box-shadow:
+    0 0 40px rgba(123, 97, 255, 0.2),
+    0 0 80px rgba(123, 97, 255, 0.08);
+}
+
+/* ─── Magnetic Button ────────────────────────────────────── */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+}
+.magnetic-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--plasma-light), var(--plasma));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.magnetic-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 32px rgba(123, 97, 255, 0.4);
+}
+.magnetic-btn:hover::before {
+  opacity: 1;
+}
+.magnetic-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Phase Progress Bar ─────────────────────────────────── */
+.phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--graphite-light);
+  transition: all 0.4s ease;
+}
+.phase-dot.active {
+  background: var(--plasma);
+  box-shadow: 0 0 12px var(--plasma);
+  transform: scale(1.4);
+}
+.phase-dot.completed {
+  background: rgba(123, 97, 255, 0.5);
+}
+
+/* ─── Message Bubble Animations ──────────────────────────── */
+@keyframes slideInUser {
+  from { opacity: 0; transform: translateX(20px) translateY(8px); }
+  to   { opacity: 1; transform: translateX(0) translateY(0); }
+}
+@keyframes slideInAI {
+  from { opacity: 0; transform: translateX(-20px) translateY(8px); }
+  to   { opacity: 1; transform: translateX(0) translateY(0); }
+}
+
+.msg-user { animation: slideInUser 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+.msg-ai   { animation: slideInAI 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+/* ─── Typing Indicator ───────────────────────────────────── */
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%            { transform: translateY(-6px); opacity: 1; }
+}
+.typing-dot:nth-child(1) { animation: typingDot 1.4s infinite 0s; }
+.typing-dot:nth-child(2) { animation: typingDot 1.4s infinite 0.2s; }
+.typing-dot:nth-child(3) { animation: typingDot 1.4s infinite 0.4s; }
+
+/* ─── Markdown Content Styles ────────────────────────────── */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  font-family: "Sora", sans-serif;
+  font-weight: 600;
+  margin: 0.75rem 0 0.4rem;
+  color: var(--ghost);
+}
+
+.markdown-content p {
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+  color: rgba(240, 239, 244, 0.85);
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.markdown-content li {
+  line-height: 1.7;
+  margin-bottom: 0.25rem;
+  color: rgba(240, 239, 244, 0.85);
+}
+
+.markdown-content strong {
+  color: var(--plasma-light);
+  font-weight: 600;
+}
+
+.markdown-content code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.82em;
+  background: rgba(123, 97, 255, 0.12);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  color: var(--plasma-light);
+}
+
+/* ─── Input Focus Ring ───────────────────────────────────── */
+.chat-input:focus {
+  outline: none;
+  border-color: var(--plasma);
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.25);
+}
+
+/* ─── Topographic Background ─────────────────────────────── */
+.topo-bg {
+  background-image:
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent,
+      transparent 40px,
+      rgba(123, 97, 255, 0.03) 41px,
+      rgba(123, 97, 255, 0.03) 42px
+    );
+}
+
+/* ─── HUD Bracket ────────────────────────────────────────── */
+.hud-bracket {
+  font-family: "Fira Code", monospace;
+  font-size: 0.7rem;
+  color: var(--plasma);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
