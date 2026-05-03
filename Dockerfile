@@ -40,6 +40,6 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 # Expose the port
 EXPOSE 8080
 
-# Run Uvicorn from the backend directory
+# Run Uvicorn from the backend directory using the PORT env variable
 WORKDIR /app/backend
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"
