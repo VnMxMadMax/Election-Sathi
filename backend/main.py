@@ -17,7 +17,8 @@ from functools import lru_cache
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
@@ -216,3 +217,25 @@ async def reset_session(request: Request, payload: SessionResetRequest):
     if payload.session_id in session_store:
         del session_store[payload.session_id]
         logger.info("Session reset: %s", payload.session_id)
+
+
+# ---------------------------------------------------------------------------
+# Serve Frontend Static Files
+# ---------------------------------------------------------------------------
+frontend_dist = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+if os.path.exists(frontend_dist):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # Serve index.html for all other routes (React Router support)
+        # Avoid intercepting valid API paths
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not Found")
+            
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
+else:
+    logger.warning(f"Frontend dist folder not found at {frontend_dist}. UI will not be served.")
